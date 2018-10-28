@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.send_button">
+        <item name="layout_constraintStart_toStartOf">@id/beginline</item>
+        <item name="layout_constraintEnd_toEndOf">@id/sendLine</item>
+    </style>
+
+    <style name="AppTheme.status_text">
+
+        <item name="layout_constraintStart_toStartOf">@id/sendLine</item>
+        <item name="layout_constraintEnd_toEndOf">@id/cancelline</item>
+    </style>
+
+    <style name="AppTheme.cancel_button">
+        <item name="layout_constraintStart_toStartOf">@id/cancelline</item>
+        <item name="layout_constraintEnd_toEndOf">@id/endline</item>
+    </style>
+
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">JobScheduleerTest</string>
+    <string name="asend">발송 A</string>
+    <string name="a_cancel">취소 A</string>
+    <string name="b_send">발송 B</string>
+    <string name="b_cancel">취소 B</string>
+    <string name="c_send">발송 C</string>
+    <string name="c_cancel">취소 c</string>
+    <string name="cancel_all">모두취소</string>
+</resources>
