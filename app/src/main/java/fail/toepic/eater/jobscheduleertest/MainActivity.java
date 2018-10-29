@@ -56,13 +56,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				fire(B_KEY);
 				break;
 			case R.id.b_cancel:
-				cancel(A_KEY);
+				cancel(B_KEY);
 				break;
 			case R.id.c_send:
-				fire(B_KEY);
+				fire(C_KEY);
 				break;
 			case R.id.c_cancel:
-				cancel(A_KEY);
+				cancel(C_KEY);
 				break;
 			case R.id.cancel_all:
 				cancelAll();
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 		alarmIntent.putExtra(KEY_KEY,key);
 
-        PendingIntent pIntent = PendingIntent.getBroadcast(this,key, alarmIntent, 0);
+//        PendingIntent pIntent = PendingIntent.getBroadcast(this,key, alarmIntent, 0);
 		long mills = System.currentTimeMillis()+(6 * 1000 ); //test
 
         		SimpleAlarm.Set(this,mills,key,alarmIntent
@@ -109,23 +109,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void cancel(int key){
-		SimpleAlarm.cancel(this,key);
+		Intent intent = new Intent(Const.ACTION_ALARMTEST);
+		SimpleAlarm.cancel(this,key,intent);
 	}
 
 	private void cancelAll(){
 		SimpleAlarm.cancelAll(this);
 	}
 
-	public class GlobalReceiver extends BroadcastReceiver{
-
-		public GlobalReceiver() {
-		}
-
-		@Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context,"Fire",Toast.LENGTH_SHORT).show();
-        }
-    }
+//	public class GlobalReceiver extends BroadcastReceiver{
+//
+//		public GlobalReceiver() {
+//		}
+//
+//		@Override
+//        public void onReceive(Context context, Intent intent) {
+//            Toast.makeText(context,"Fire",Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
 //
 //	public void onClick(View view) {

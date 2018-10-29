@@ -17,6 +17,7 @@ import android.support.annotation.RequiresApi;
 import java.nio.BufferUnderflowException;
 import java.util.Date;
 
+import fail.toepic.eater.jobscheduleertest.Const;
 import fail.toepic.eater.jobscheduleertest.MainActivity;
 import fail.toepic.eater.jobscheduleertest.util.LOG;
 
@@ -44,6 +45,7 @@ public class SimpleAlarm {
 				return;
 			}
 			PendingIntent pIntent = PendingIntent.getBroadcast(context, alarmKey, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//			PendingIntent pIntent = PendingIntent.getBroadcast(context, alarmKey, alarmIntent,0);
 			if (Build.VERSION.SDK_INT >= 19) {
 				alarmManager.setExact(AlarmManager.RTC_WAKEUP, mills, pIntent);
 			} else {
@@ -60,7 +62,7 @@ public class SimpleAlarm {
 	 * @param alarmIntent
 	 * @param componentNames
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	private static void SetJobScheduler(Context context, long mills, int alarmKey, Intent alarmIntent, ComponentName[] componentNames) {
 
 		LOG.D("dlwlrma","SetJobSchedular : ",alarmIntent);
@@ -97,26 +99,40 @@ public class SimpleAlarm {
 		return new Date().getTime();
 	}
 
-	public static void cancel(Context context,int alarmKey) {
+	/**
+	 * 인텐트와 알람키를 받아서 해당 알람을 취소 한다.  알람인텐트(엑션값만 영향을 주는 것으로 추정)와 알람키를 키로 하여 알람을 취소 합니다.
+	 * @param context  알람메니저나 잡스케줄러를 생성하는데 사용되는 컨텍스트 값입니다.
+	 * @param alarmKey  취소할 알람 키값을 지정합니다.
+	 * @param alarmIntent  취소할 알람의 인텐트를 지정합니다.
+	 */
+	public static void cancel(Context context,int alarmKey,Intent alarmIntent) {
+
+		if (context == null || alarmIntent == null) {
+			return;
+		}
 		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pIntent = PendingIntent.getBroadcast(context, alarmKey, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pIntent = PendingIntent.getBroadcast(context, alarmKey, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		if (am != null) {
 			am.cancel(pIntent);
 		}
 
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			JobScheduler mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 			mJobService.cancel(alarmKey);
 		}
 
 	}
 
+	/**
+	 *  모든 알람을 취소합니다. 단 알람매니저는 해당 기능을 지원하지 않기 때문에 -JobScheduler를 사용하는 - APK 21 이상 에서만 정상 취소 됩니다.
+	 *  NOTE : 만약 해당 기능이 필요하다면 자체적으로 알람에 대한 키값을 트레킹 하거나. WorkManager를 사용하는 것을 고려 할 것.
+	 */
+	@RequiresApi(android.os.Build.VERSION_CODES.M)
 	public static void cancelAll(Context context) {
-		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-		if (am != null) {
-
-		}
-
+//		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+//		if (am != null) {
+//			//알람 매니져 일괄 삭제 지원 안함.
+//		}
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 			JobScheduler mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 			if (mJobService != null) {
@@ -126,7 +142,7 @@ public class SimpleAlarm {
 	}
 
 
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	public static class JobService extends android.app.job.JobService{
 
 		private static String KEY_ACTION = "ACTION";
@@ -168,7 +184,7 @@ public class SimpleAlarm {
 			return false;
 		}
 
-		@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+		@RequiresApi(api = Build.VERSION_CODES.M)
 		public static PersistableBundle createPersistableBundleFromIntent(Intent intent,
 																		  ComponentName[] componentNames) {
 
@@ -180,10 +196,12 @@ public class SimpleAlarm {
 
 				pb.putString(KEY_ACTION,action);
 			}
-
+			// 이하 미지원 필요시 작성 할 것.
+			// type
 			// add category
 			// set flag
 			// set data
+
 			// componentName
 			PersistableBundle cnBundle = new PersistableBundle();
 			for (ComponentName componentName : componentNames) {
@@ -193,7 +211,7 @@ public class SimpleAlarm {
 				pb.putPersistableBundle(KEY_COMPONENT_NAME,cnBundle);
 			}
 
-			// type
+
 //			// extras.
 			Bundle extras = intent.getExtras();
 			if(extras != null && extras.size() > 0){
@@ -204,7 +222,7 @@ public class SimpleAlarm {
 			return pb;
 		}
 
-		@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+		@RequiresApi(api = Build.VERSION_CODES.M)
 		public static Intent jobParametersToIntent(JobParameters jobParameters) {
 
 			PersistableBundle extras = jobParameters.getExtras();
