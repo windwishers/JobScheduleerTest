@@ -14,11 +14,8 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 
-import java.nio.BufferUnderflowException;
 import java.util.Date;
 
-import fail.toepic.eater.jobscheduleertest.Const;
-import fail.toepic.eater.jobscheduleertest.MainActivity;
 import fail.toepic.eater.jobscheduleertest.util.LOG;
 
 import static com.sk.pe.group.SimpleAlarm.JobService.createPersistableBundleFromIntent;
@@ -55,12 +52,7 @@ public class SimpleAlarm {
 	}
 
 	/**
-	 * 마시멜로우 이상에서 잡스케줄러를 이용한 알람 설정을 위하여 작성 된 클래스.
-	 * @param context
-	 * @param mills
-	 * @param alarmKey
-	 * @param alarmIntent
-	 * @param componentNames
+	 * 마시멜로우 이상에서 잡스케줄러를 이용한 알람 설정을 위하여 작성 된 함수
 	 */
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	private static void SetJobScheduler(Context context, long mills, int alarmKey, Intent alarmIntent, ComponentName[] componentNames) {
@@ -118,7 +110,9 @@ public class SimpleAlarm {
 
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			JobScheduler mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-			mJobService.cancel(alarmKey);
+			if (mJobService != null) {
+				mJobService.cancel(alarmKey);
+			}
 		}
 
 	}
@@ -152,25 +146,18 @@ public class SimpleAlarm {
 		@Override
 		public boolean onStartJob(JobParameters jobParameters) {
 
-
-			LOG.D("dlwlrma","111");
-
-
 			PersistableBundle componentNames = jobParameters.getExtras()
 					.getPersistableBundle(KEY_COMPONENT_NAME);
-
-
 
 			assert componentNames != null;
 			for (String componentName : componentNames.keySet()) {
 				Intent intent = jobParametersToIntent(jobParameters);
-				intent.setComponent(new ComponentName(componentNames.getString(componentName),componentName));
-				LOG.D("dlwlrma","componentName : "+componentName);
-//				intent.setComponent(new ComponentName("fail.toepic.eater.jobscheduleertest","fail.toepic.eater.jobscheduleertest.AlarmReceiver1"));
-				LOG.D("dlwlrma","Send : ",intent);
+				if (componentNames.getString(componentName) != null) {
+					//noinspection ConstantConditions  //뭐라는지 모르겠음.
+					intent.setComponent(new ComponentName(componentNames.getString(componentName),componentName));
+				}
 				getApplication().sendBroadcast(intent);
 			}
-
 
 			// onStartJob 이후에 진행잘 작업이 없음으로 false를 반환 한다.
 			return false;
@@ -246,6 +233,7 @@ public class SimpleAlarm {
 
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public static class BUNDLE{
 		public static PersistableBundle toPersistable(Bundle bundle){
@@ -316,9 +304,6 @@ public class SimpleAlarm {
 				}
 			} else if (value instanceof PersistableBundle) {
 				baseBundle.putAll((PersistableBundle) value);
-			} else {
-//				new IllegalArgumentException("Objects of type " + value.getClass().getSimpleName()
-//						+ " can not be put into a " + BaseBundle.class.getSimpleName());
 			}
 		}
 

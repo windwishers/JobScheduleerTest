@@ -1,5 +1,6 @@
 package fail.toepic.eater.jobscheduleertest;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import fail.toepic.eater.jobscheduleertest.util.LOG;
 
 public class AlarmReceiver1 extends BroadcastReceiver {
 
+	@SuppressLint("SetTextI18n")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 

@@ -1,9 +1,8 @@
 package fail.toepic.eater.jobscheduleertest;
 
+@SuppressWarnings("WeakerAccess")
 public class Const {
-	public static int ALARM_KEY = 1;
 
-	private Const() {
-	}
+	private Const() {}
 	public static final String ACTION_ALARMTEST = "fail.toepic.eater.jobscheduleertest.AlarmTest";
 }

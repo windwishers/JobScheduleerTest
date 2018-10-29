@@ -1,11 +1,9 @@
 package fail.toepic.eater.jobscheduleertest;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,9 +14,14 @@ import com.sk.pe.group.SimpleAlarm;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+	// 코드 복잡도를 낮추기 위해 메모리 릭을 방기함.  //실코드에서 이런짓 하지 말 것.
+	@SuppressLint("StaticFieldLeak")
 	public static TextView a_status;
+	@SuppressLint("StaticFieldLeak")
 	public static TextView b_status;
+	@SuppressLint("StaticFieldLeak")
 	public static TextView c_status;
+
 	public static final int A_KEY =1;
 	public static final int B_KEY =2;
 	public static final int C_KEY =3;
@@ -73,12 +76,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 	private void fire(int key){
 		clear(key);
-		AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		Intent alarmIntent = new Intent(Const.ACTION_ALARMTEST);
 
+		Intent alarmIntent = new Intent(Const.ACTION_ALARMTEST);
 		alarmIntent.putExtra(KEY_KEY,key);
 
-//        PendingIntent pIntent = PendingIntent.getBroadcast(this,key, alarmIntent, 0);
 		long mills = System.currentTimeMillis()+(6 * 1000 ); //test
 
         		SimpleAlarm.Set(this,mills,key,alarmIntent
@@ -114,7 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void cancelAll(){
-		SimpleAlarm.cancelAll(this);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			SimpleAlarm.cancelAll(this);
+		}
 	}
 
 //	public class GlobalReceiver extends BroadcastReceiver{

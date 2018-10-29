@@ -3,7 +3,6 @@ package fail.toepic.eater.jobscheduleertest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import fail.toepic.eater.jobscheduleertest.util.LOG;
 
