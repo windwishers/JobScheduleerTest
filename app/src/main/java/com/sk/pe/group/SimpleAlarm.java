@@ -236,8 +236,9 @@ public class SimpleAlarm {
 
 			PersistableBundle persistExtra = extras.getPersistableBundle(KEY_EXTRAS);
 
-			intent.putExtras(BUNDLE.fromPersistable(persistExtra));
-
+			if (persistExtra != null) {
+				intent.putExtras(BUNDLE.fromPersistable(persistExtra));
+			}
 
 			return intent;
 		}
