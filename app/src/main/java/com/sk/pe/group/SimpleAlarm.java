@@ -142,6 +142,7 @@ public class SimpleAlarm {
 		private static String KEY_ACTION = "ACTION";
 		private static String KEY_COMPONENT_NAME = "COMPONENT_NAME";
 		private static String KEY_EXTRAS = "EXTRAS";
+		private static String KEY_FLAGS = "KEY_FLAGS";
 
 		@Override
 		public boolean onStartJob(JobParameters jobParameters) {
@@ -187,6 +188,12 @@ public class SimpleAlarm {
 			// type
 			// add category
 			// set flag
+
+			int flags = intent.getFlags();
+			if (flags !=0) {
+				pb.putInt(KEY_FLAGS,flags);
+			}
+
 			// set data
 
 			// componentName
@@ -222,6 +229,10 @@ public class SimpleAlarm {
 				intent = new Intent();
 			}
 
+			int flags = extras.getInt(KEY_FLAGS,-1);
+			if (flags != -1) {
+				intent.setFlags(flags);
+			}
 
 			PersistableBundle persistExtra = extras.getPersistableBundle(KEY_EXTRAS);
 
